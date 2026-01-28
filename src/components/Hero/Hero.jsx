@@ -1,7 +1,7 @@
 import "./Hero.css";
 import logo from "../../assets/logo.png";
 
-const Hero = () => {
+const Hero = ({ openSignup }) => {
   return (
     <section className="hero">
       <div className="hero-overlay">
@@ -13,7 +13,9 @@ const Hero = () => {
           Confidence, elegance, and beauty — crafted just for you.
         </p>
 
-        <button className="join-btn">Join Us</button>
+        <button className="join-btn" onClick={openSignup}>
+          Join Us
+        </button>
       </div>
     </section>
   );

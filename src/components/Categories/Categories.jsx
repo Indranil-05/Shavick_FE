@@ -1,4 +1,5 @@
 import "./Categories.css";
+import { useNavigate } from "react-router-dom";
 
 const categories = [
   "French Tips",
@@ -11,9 +12,10 @@ const categories = [
 ];
 
 const Categories = () => {
+  const navigate = useNavigate();
+
   const handleCategoryClick = (category) => {
-    alert(`You clicked on ${category}`);
-    // later: navigate(`/category/${category}`)
+    navigate(`/category/${category.toLowerCase().replace(/\s+/g, "-")}`);
   };
 
   return (
