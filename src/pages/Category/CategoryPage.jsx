@@ -30,6 +30,51 @@ const products = [
     rating: 4.8,
     boughtCount: 1564,
   },
+  {
+    id: 4,
+    category: "french-tips",
+    name: "Elegant French Tips",
+    price: "₹799",
+    image: "https://celebritips.com/cdn/shop/files/0c0104596g6b1664a430b7c428ee23bf.jpg?v=1763036614",
+    rating: 4.5,
+    boughtCount: 980,
+  },
+  {
+    id: 5,
+    category: "soft-pastel-nails",
+    name: "Pastel Dream Nails",
+    price: "₹999",
+    image: "https://i.pinimg.com/736x/42/23/12/422312da3cb31f840e94fe9d552bf485.jpg",
+    rating: 4.4,
+    boughtCount: 765
+  },
+  {
+    id: 6,
+    category: "micro-french",
+    name: "Micro French Chic",
+    price: "₹899",
+    image: "https://thepinkissue.com/wp-content/uploads/2025/03/Light-blue-micro-french-manicure.jpg.webp",
+    rating: 4.7,
+    boughtCount: 432
+  },
+  {
+    id: 7,
+    category: "oval-shaped",
+    name: "Oval Shaped Glam",
+    price: "₹1099",
+    image: "https://cdn.shopify.com/s/files/1/0890/9055/6188/files/round-press-on-nails_600x600.jpg?v=1727424737",
+    rating: 4.2,
+    boughtCount: 654
+  },
+  {
+    id: 8,
+    category: "classic-long",
+    name: "Classic Long Nails",
+    price: "₹1199",
+    image: "https://i.pinimg.com/736x/77/da/7e/77da7e7b74cc41dfd368eefac4ca2391.jpg",
+    rating: 4.5,
+    boughtCount: 789
+  },
 ];
 
 /* ⭐ Helper */

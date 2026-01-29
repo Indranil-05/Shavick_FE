@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./ProductPage.css";
 import { useCart } from "../../context/CartContext";
 
@@ -13,18 +13,6 @@ const products = [
       "https://i.pinimg.com/originals/fa/01/56/fa0156db39315d627cb0557d1de58b1d.jpg",
     rating: 4.6,
     boughtCount: 1248,
-    reviews: [
-      {
-        user: "Ananya",
-        rating: 5,
-        comment: "Absolutely loved these nails! Super classy and long-lasting.",
-      },
-      {
-        user: "Riya",
-        rating: 4,
-        comment: "Great quality, looks elegant. Worth the price.",
-      },
-    ],
     description:
       "Elegant and timeless French tip nail extensions perfect for any occasion.",
   },
@@ -37,13 +25,6 @@ const products = [
       "https://www.colorcoatss.com/cdn/shop/files/IMG-9412.jpg?v=1700768097",
     rating: 4.3,
     boughtCount: 876,
-    reviews: [
-      {
-        user: "Pooja",
-        rating: 4,
-        comment: "Very natural look. Loved the finish.",
-      },
-    ],
     description:
       "Minimal and classy nude nail extensions with a premium matte finish.",
   },
@@ -56,19 +37,12 @@ const products = [
       "https://www.byrdie.com/thmb/EihxuPQxkoeNeL-FGagnWcHr2B8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/ScreenShot2020-10-20at1.11.02PM-19cb87a56adb494680066a081a3d4e2e.png",
     rating: 4.8,
     boughtCount: 1564,
-    reviews: [
-      {
-        user: "Sneha",
-        rating: 5,
-        comment: "Matte finish is amazing! Got so many compliments.",
-      },
-    ],
     description:
       "Bold matte nail extensions designed for confident everyday wear.",
   },
 ];
 
-/* ⭐ Helper */
+/* ⭐ Stars */
 const renderStars = (rating) => {
   const full = Math.floor(rating);
   const empty = 5 - full;
@@ -77,6 +51,7 @@ const renderStars = (rating) => {
 
 const ProductPage = ({ isLoggedIn, openLogin }) => {
   const { productId } = useParams();
+  const navigate = useNavigate();
 
   const {
     cartItems,
@@ -85,21 +60,21 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
     decreaseQty,
   } = useCart();
 
-  const product = products.find((p) => p.id === productId);
   const numericProductId = Number(productId);
-
-  const cartItem = cartItems.find(
-    (item) => item.id === numericProductId
-  );
-
+  const product = products.find((p) => Number(p.id) === numericProductId);
+  const cartItem = cartItems.find((item) => item.id === numericProductId);
 
   if (!product) {
     return <p style={{ padding: "50px" }}>Product not found</p>;
   }
 
+  const suggestedProducts = products.filter(
+    (p) => p.id !== productId
+  );
+
   const handleAdd = () => {
     if (!isLoggedIn) {
-      openLogin(); // 🔐 force login
+      openLogin();
       return;
     }
     addToCart(product);
@@ -115,7 +90,6 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
 
         {/* DETAILS */}
         <div className="product-details">
-          {/* NAME + RATING */}
           <h1 className="product-title">
             {product.name}
             <span className="product-rating-inline">
@@ -124,19 +98,17 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
             </span>
           </h1>
 
-          {/* CATEGORY + BOUGHT COUNT */}
           <p className="product-category">
             {product.category}
             <span className="bought-inline">
-              • {product.boughtCount.toLocaleString()} people bought this
+              • {product.boughtCount.toLocaleString()} bought
             </span>
           </p>
 
           <p className="product-price">{product.price}</p>
-
           <p className="product-description">{product.description}</p>
 
-          {/* 🛒 CART CONTROLS */}
+          {/* CART CONTROLS */}
           {!cartItem ? (
             <button className="add-to-cart-btn" onClick={handleAdd}>
               Add to Cart
@@ -146,31 +118,30 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
               <span onClick={() => decreaseQty(numericProductId)}>
                 {cartItem.qty === 1 ? "🗑️" : "➖"}
               </span>
-
               <span>{cartItem.qty}</span>
-
-             <span onClick={() => increaseQty(numericProductId)}>➕</span>
+              <span onClick={() => increaseQty(numericProductId)}>➕</span>
             </div>
           )}
-        </div>
-      </div>
 
-      {/* 💬 REVIEWS */}
-      <div className="reviews-section">
-        <h2>Customer Reviews</h2>
+          {/* 🔥 SUGGESTED PRODUCTS */}
+          <div className="suggested-section">
+            <h3>You may also like</h3>
 
-        {product.reviews.map((review, index) => (
-          <div className="review-card" key={index}>
-            <div className="review-header">
-              <strong>{review.user}</strong>
-              <span className="stars">
-                {"★".repeat(review.rating)}
-                {"☆".repeat(5 - review.rating)}
-              </span>
+            <div className="suggested-grid">
+              {suggestedProducts.map((item) => (
+                <div
+                  key={item.id}
+                  className="suggested-card"
+                  onClick={() => navigate(`/product/${item.id}`)}
+                >
+                  <img src={item.image} alt={item.name} />
+                  <p>{item.name}</p>
+                  <span>{item.price}</span>
+                </div>
+              ))}
             </div>
-            <p>{review.comment}</p>
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );

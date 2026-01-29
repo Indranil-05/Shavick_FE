@@ -188,3 +188,42 @@
   cursor: default;
   transform: none;
 }
+
+/* SUGGESTED PRODUCTS */
+.suggested-section {
+  margin-top: 40px;
+}
+
+.suggested-section h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #5a2d45;
+}
+
+.suggested-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.suggested-card {
+  cursor: pointer;
+  text-align: center;
+}
+
+.suggested-card img {
+  width: 100%;
+  border-radius: 14px;
+  margin-bottom: 8px;
+}
+
+.suggested-card p {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5a2d45;
+}
+
+.suggested-card span {
+  font-size: 13px;
+  color: #c48b9f;
+}
