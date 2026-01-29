@@ -1,48 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
 import "./ProductPage.css";
 import { useCart } from "../../context/CartContext";
+import products from "../../data/products";
 
-/* Dummy product data */
-const products = [
-  {
-    id: "1",
-    name: "French Tip Classic",
-    price: "₹899",
-    category: "French Tips",
-    image:
-      "https://i.pinimg.com/originals/fa/01/56/fa0156db39315d627cb0557d1de58b1d.jpg",
-    rating: 4.6,
-    boughtCount: 1248,
-    description:
-      "Elegant and timeless French tip nail extensions perfect for any occasion.",
-  },
-  {
-    id: "2",
-    name: "Soft Nude Elegance",
-    price: "₹999",
-    category: "Classic Nude",
-    image:
-      "https://www.colorcoatss.com/cdn/shop/files/IMG-9412.jpg?v=1700768097",
-    rating: 4.3,
-    boughtCount: 876,
-    description:
-      "Minimal and classy nude nail extensions with a premium matte finish.",
-  },
-  {
-    id: "3",
-    name: "Matte Finish Pro",
-    price: "₹1099",
-    category: "Matte Finish Nails",
-    image:
-      "https://www.byrdie.com/thmb/EihxuPQxkoeNeL-FGagnWcHr2B8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/ScreenShot2020-10-20at1.11.02PM-19cb87a56adb494680066a081a3d4e2e.png",
-    rating: 4.8,
-    boughtCount: 1564,
-    description:
-      "Bold matte nail extensions designed for confident everyday wear.",
-  },
-];
-
-/* ⭐ Stars */
+/* ⭐ Helper */
 const renderStars = (rating) => {
   const full = Math.floor(rating);
   const empty = 5 - full;
@@ -50,19 +11,14 @@ const renderStars = (rating) => {
 };
 
 const ProductPage = ({ isLoggedIn, openLogin }) => {
-  const { productId } = useParams();
+  const { productId } = useParams(); // 👈 STRING
   const navigate = useNavigate();
 
-  const {
-    cartItems,
-    addToCart,
-    increaseQty,
-    decreaseQty,
-  } = useCart();
+  const { cartItems, addToCart, increaseQty, decreaseQty } = useCart();
 
-  const numericProductId = Number(productId);
-  const product = products.find((p) => Number(p.id) === numericProductId);
-  const cartItem = cartItems.find((item) => item.id === numericProductId);
+  // ✅ STRING COMPARISON (FIX)
+  const product = products.find((p) => p.id === productId);
+  const cartItem = cartItems.find((item) => item.id === productId);
 
   if (!product) {
     return <p style={{ padding: "50px" }}>Product not found</p>;
@@ -77,7 +33,7 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
       openLogin();
       return;
     }
-    addToCart(product);
+    addToCart(product); // product.id stays STRING
   };
 
   return (
@@ -101,46 +57,46 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
           <p className="product-category">
             {product.category}
             <span className="bought-inline">
-              • {product.boughtCount.toLocaleString()} bought
+              • {product.boughtCount.toLocaleString()} people bought this
             </span>
           </p>
 
           <p className="product-price">{product.price}</p>
           <p className="product-description">{product.description}</p>
 
-          {/* CART CONTROLS */}
+          {/* 🛒 CART CONTROLS */}
           {!cartItem ? (
             <button className="add-to-cart-btn" onClick={handleAdd}>
               Add to Cart
             </button>
           ) : (
             <div className="qty-controls">
-              <span onClick={() => decreaseQty(numericProductId)}>
+              <span onClick={() => decreaseQty(productId)}>
                 {cartItem.qty === 1 ? "🗑️" : "➖"}
               </span>
               <span>{cartItem.qty}</span>
-              <span onClick={() => increaseQty(numericProductId)}>➕</span>
+              <span onClick={() => increaseQty(productId)}>➕</span>
             </div>
           )}
+        </div>
+      </div>
 
-          {/* 🔥 SUGGESTED PRODUCTS */}
-          <div className="suggested-section">
-            <h3>You may also like</h3>
+      {/* 🔥 SUGGESTED PRODUCTS */}
+      <div className="suggested-section">
+        <h2>You may also like</h2>
 
-            <div className="suggested-grid">
-              {suggestedProducts.map((item) => (
-                <div
-                  key={item.id}
-                  className="suggested-card"
-                  onClick={() => navigate(`/product/${item.id}`)}
-                >
-                  <img src={item.image} alt={item.name} />
-                  <p>{item.name}</p>
-                  <span>{item.price}</span>
-                </div>
-              ))}
+        <div className="suggested-grid">
+          {suggestedProducts.map((item) => (
+            <div
+              key={item.id}
+              className="suggested-card"
+              onClick={() => navigate(`/product/${item.id}`)}
+            >
+              <img src={item.image} alt={item.name} />
+              <p>{item.name}</p>
+              <span>{item.price}</span>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

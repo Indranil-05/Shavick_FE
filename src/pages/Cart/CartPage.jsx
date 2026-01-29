@@ -1,4 +1,5 @@
 import { useCart } from "../../context/CartContext";
+import { useNavigate } from "react-router-dom";
 import "./CartPage.css";
 
 const CartPage = () => {
@@ -8,6 +9,8 @@ const CartPage = () => {
     decreaseQty,
   } = useCart();
 
+  const navigate = useNavigate();
+
   const total = cartItems.reduce(
     (sum, item) =>
       sum + item.qty * parseInt(item.price.replace("₹", "")),
@@ -16,8 +19,22 @@ const CartPage = () => {
 
   return (
     <div className="cart-page">
-      <h1>Your Cart</h1>
 
+      {/* HEADER WITH CHECKOUT BUTTON */}
+      <div className="cart-header">
+        <h1>Your Cart</h1>
+
+        {cartItems.length > 0 && (
+          <button
+            className="checkout-btn"
+            onClick={() => navigate("/checkout")}
+          >
+            Proceed to Checkout →
+          </button>
+        )}
+      </div>
+
+      {/* CART CONTENT */}
       {cartItems.length === 0 ? (
         <p>Your cart is empty</p>
       ) : (
@@ -33,7 +50,7 @@ const CartPage = () => {
                   ₹{parseInt(item.price.replace("₹", "")) * item.qty}
                 </p>
 
-                {/* 🛒 QTY CONTROLS */}
+                {/* QUANTITY CONTROLS */}
                 <div className="qty-controls">
                   <span onClick={() => decreaseQty(item.id)}>
                     {item.qty === 1 ? "🗑️" : "➖"}

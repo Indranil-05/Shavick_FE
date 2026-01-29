@@ -8,6 +8,11 @@ import CategoryPage from "./pages/Category/CategoryPage";
 import ProductPage from "./pages/Product/ProductPage";
 import CartPage from "./pages/Cart/CartPage";
 import AuthModal from "./components/AuthModal/AuthModal";
+import Checkout from "./pages/Checkout/Checkout";
+import TrackOrder from "./pages/TrackOrder/TrackOrder";
+import Orders from "./pages/Orders/Orders";
+import NotFound from "./pages/NotFound/NotFound";
+
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
@@ -68,6 +73,12 @@ const App = () => {
         />
 
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/track-order" element={<TrackOrder />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="*" element={<NotFound />} />
+        
+
       </Routes>
 
       {/* 🔒 GLOBAL FOOTER */}

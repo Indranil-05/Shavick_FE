@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import { FiShoppingBag, FiUser } from "react-icons/fi";
+import { FiShoppingBag, FiUser, FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useCart } from "../../context/CartContext";
+import SearchModal from "../SearchModal/SearchModal";
 
 const Navbar = ({ isLoggedIn, openLogin, openSignup, onLogout }) => {
   const [showAccount, setShowAccount] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   const categoriesRef = useRef(null);
   const accountRef = useRef(null);
@@ -80,10 +82,10 @@ const Navbar = ({ isLoggedIn, openLogin, openSignup, onLogout }) => {
 
         {/* RIGHT */}
         <div className="navbar-right">
-          <input
-            type="text"
-            className="navbar-search"
-            placeholder="Search nail styles..."
+          {/* SEARCH ICON */}
+          <FiSearch
+            className="search-trigger"
+            onClick={() => setShowSearch(true)}
           />
 
           {!isLoggedIn ? (
@@ -120,9 +122,32 @@ const Navbar = ({ isLoggedIn, openLogin, openSignup, onLogout }) => {
                 <FiUser />
                 {showAccount && (
                   <div className="account-dropdown">
-                    <p>My Orders</p>
-                    <p>Track Order</p>
-                    <p onClick={onLogout}>Logout</p>
+                    <p
+                      onClick={() => {
+                        navigate("/orders");
+                        setShowAccount(false);
+                      }}
+                    >
+                      My Orders
+                    </p>
+
+                    <p
+                      onClick={() => {
+                        navigate("/track-order");
+                        setShowAccount(false);
+                      }}
+                    >
+                      Track Order
+                    </p>
+
+                    <p
+                      onClick={() => {
+                        onLogout();
+                        setShowAccount(false);
+                      }}
+                    >
+                      Logout
+                    </p>
                   </div>
                 )}
               </div>
@@ -149,6 +174,11 @@ const Navbar = ({ isLoggedIn, openLogin, openSignup, onLogout }) => {
             </div>
           ))}
         </div>
+      )}
+
+      {/* SEARCH MODAL */}
+      {showSearch && (
+        <SearchModal onClose={() => setShowSearch(false)} />
       )}
     </>
   );

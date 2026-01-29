@@ -1,0 +1,30 @@
+.orders-page {
+  padding: 60px;
+  min-height: 100vh;
+  background: #fff7fa;
+}
+
+.order-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.status {
+  color: #ff5fa2;
+  font-weight: bold;
+}
