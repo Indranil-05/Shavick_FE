@@ -11,12 +11,12 @@ const renderStars = (rating) => {
 };
 
 const ProductPage = ({ isLoggedIn, openLogin }) => {
-  const { productId } = useParams(); // 👈 STRING
+  const { productId } = useParams(); // string id
   const navigate = useNavigate();
 
   const { cartItems, addToCart, increaseQty, decreaseQty } = useCart();
 
-  // ✅ STRING COMPARISON (FIX)
+  // ✅ string comparison
   const product = products.find((p) => p.id === productId);
   const cartItem = cartItems.find((item) => item.id === productId);
 
@@ -28,12 +28,9 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
     (p) => p.id !== productId
   );
 
+  // ✅ allow guest add-to-cart
   const handleAdd = () => {
-    if (!isLoggedIn) {
-      openLogin();
-      return;
-    }
-    addToCart(product); // product.id stays STRING
+    addToCart(product);
   };
 
   return (
@@ -50,7 +47,9 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
             {product.name}
             <span className="product-rating-inline">
               <span className="stars">{renderStars(product.rating)}</span>
-              <span className="rating-text">{product.rating} / 5</span>
+              <span className="rating-text">
+                {product.rating} / 5
+              </span>
             </span>
           </h1>
 
@@ -62,11 +61,16 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
           </p>
 
           <p className="product-price">{product.price}</p>
-          <p className="product-description">{product.description}</p>
+          <p className="product-description">
+            {product.description}
+          </p>
 
           {/* 🛒 CART CONTROLS */}
           {!cartItem ? (
-            <button className="add-to-cart-btn" onClick={handleAdd}>
+            <button
+              className="add-to-cart-btn"
+              onClick={handleAdd}
+            >
               Add to Cart
             </button>
           ) : (
@@ -74,8 +78,12 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
               <span onClick={() => decreaseQty(productId)}>
                 {cartItem.qty === 1 ? "🗑️" : "➖"}
               </span>
+
               <span>{cartItem.qty}</span>
-              <span onClick={() => increaseQty(productId)}>➕</span>
+
+              <span onClick={() => increaseQty(productId)}>
+                ➕
+              </span>
             </div>
           )}
         </div>
@@ -90,7 +98,9 @@ const ProductPage = ({ isLoggedIn, openLogin }) => {
             <div
               key={item.id}
               className="suggested-card"
-              onClick={() => navigate(`/product/${item.id}`)}
+              onClick={() =>
+                navigate(`/product/${item.id}`)
+              }
             >
               <img src={item.image} alt={item.name} />
               <p>{item.name}</p>

@@ -107,12 +107,6 @@ const CategoryPage = ({ isLoggedIn, openLogin }) => {
 
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
-
-    if (!isLoggedIn) {
-      openLogin();
-      return;
-    }
-
     addToCart(item);
   };
 

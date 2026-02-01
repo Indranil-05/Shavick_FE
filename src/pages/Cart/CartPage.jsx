@@ -2,13 +2,8 @@ import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import "./CartPage.css";
 
-const CartPage = () => {
-  const {
-    cartItems,
-    increaseQty,
-    decreaseQty,
-  } = useCart();
-
+const CartPage = ({ isLoggedIn, openLogin }) => {
+  const { cartItems, increaseQty, decreaseQty } = useCart();
   const navigate = useNavigate();
 
   const total = cartItems.reduce(
@@ -17,24 +12,38 @@ const CartPage = () => {
     0
   );
 
+  const handleCheckout = () => {
+    if (!isLoggedIn) {
+      openLogin();   // 🔐 force login
+      return;
+    }
+
+    navigate("/checkout");
+  };
+
   return (
     <div className="cart-page">
 
-      {/* HEADER WITH CHECKOUT BUTTON */}
       <div className="cart-header">
         <h1>Your Cart</h1>
 
         {cartItems.length > 0 && (
           <button
             className="checkout-btn"
-            onClick={() => navigate("/checkout")}
+            onClick={() => {
+              if (!isLoggedIn) {
+                openLogin();
+                return;
+              }
+              navigate("/checkout");
+            }}
+
           >
             Proceed to Checkout →
           </button>
         )}
       </div>
 
-      {/* CART CONTENT */}
       {cartItems.length === 0 ? (
         <p>Your cart is empty</p>
       ) : (
@@ -50,7 +59,6 @@ const CartPage = () => {
                   ₹{parseInt(item.price.replace("₹", "")) * item.qty}
                 </p>
 
-                {/* QUANTITY CONTROLS */}
                 <div className="qty-controls">
                   <span onClick={() => decreaseQty(item.id)}>
                     {item.qty === 1 ? "🗑️" : "➖"}

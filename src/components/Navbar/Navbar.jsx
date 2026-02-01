@@ -82,76 +82,76 @@ const Navbar = ({ isLoggedIn, openLogin, openSignup, onLogout }) => {
 
         {/* RIGHT */}
         <div className="navbar-right">
-          {/* SEARCH ICON */}
+          {/* 🔎 SEARCH ICON — always */}
           <FiSearch
             className="search-trigger"
             onClick={() => setShowSearch(true)}
           />
 
+          {/* 🛒 CART — ALWAYS VISIBLE */}
+          <div
+            className="cart-icon"
+            onClick={() => navigate("/cart")}
+          >
+            <FiShoppingBag />
+            {cartCount > 0 && (
+              <span className="cart-count">{cartCount}</span>
+            )}
+          </div>
+
+          {/* 👤 AUTH AREA */}
           {!isLoggedIn ? (
             <>
               <button className="login-btn" onClick={openLogin}>
                 Login
               </button>
+
               <button className="signup-btn" onClick={openSignup}>
                 Sign Up
               </button>
             </>
           ) : (
-            <>
-              {/* CART */}
-              <div
-                className="cart-icon"
-                onClick={() => navigate("/cart")}
-              >
-                <FiShoppingBag />
-                {cartCount > 0 && (
-                  <span className="cart-count">{cartCount}</span>
-                )}
-              </div>
+            <div
+              className="account-box"
+              ref={accountRef}
+              onClick={() => {
+                setShowAccount(!showAccount);
+                setShowCategories(false);
+              }}
+            >
+              <FiUser />
 
-              {/* ACCOUNT */}
-              <div
-                className="account-box"
-                ref={accountRef}
-                onClick={() => {
-                  setShowAccount(!showAccount);
-                  setShowCategories(false);
-                }}
-              >
-                <FiUser />
-                {showAccount && (
-                  <div className="account-dropdown">
-                    <p
-                      onClick={() => {
-                        navigate("/orders");
-                        setShowAccount(false);
-                      }}
-                    >
-                      My Orders
-                    </p>
+              {showAccount && (
+                <div className="account-dropdown">
+                  <p
+                    onClick={() => {
+                      navigate("/orders");
+                      setShowAccount(false);
+                    }}
+                  >
+                    My Orders
+                  </p>
 
-                    <p
-                      onClick={() => {
-                        navigate("/track-order");
-                        setShowAccount(false);
-                      }}
-                    >
-                      Track Order
-                    </p>
+                  <p
+                    onClick={() => {
+                      navigate("/track-order");
+                      setShowAccount(false);
+                    }}
+                  >
+                    Track Order
+                  </p>
 
-                    <p
-                      onClick={() => {
-                        onLogout();
-                        setShowAccount(false);
-                      }}
-                    >
-                      Logout
-                    </p>
-                  </div>
-                )}
-              </div>
-            </>
+                  <p
+                    onClick={() => {
+                      onLogout();
+                      setShowAccount(false);
+                    }}
+                  >
+                    Logout
+                  </p>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </nav>
@@ -165,7 +165,9 @@ const Navbar = ({ isLoggedIn, openLogin, openSignup, onLogout }) => {
               className="category-item"
               onClick={() => {
                 navigate(
-                  `/category/${cat.toLowerCase().replace(/\s+/g, "-")}`
+                  `/category/${cat
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`
                 );
                 setShowCategories(false);
               }}
@@ -176,9 +178,11 @@ const Navbar = ({ isLoggedIn, openLogin, openSignup, onLogout }) => {
         </div>
       )}
 
-      {/* SEARCH MODAL */}
+      {/* 🔎 SEARCH MODAL */}
       {showSearch && (
-        <SearchModal onClose={() => setShowSearch(false)} />
+        <SearchModal
+          onClose={() => setShowSearch(false)}
+        />
       )}
     </>
   );
