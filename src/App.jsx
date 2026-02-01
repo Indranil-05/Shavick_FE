@@ -20,17 +20,19 @@ const App = () => {
   const [authMode, setAuthMode] = useState("login");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // 🔐 open login/signup
+  // 🔐 Open Login
   const openLogin = () => {
     setAuthMode("login");
     setShowModal(true);
   };
 
+  // 🔐 Open Signup
   const openSignup = () => {
     setAuthMode("signup");
     setShowModal(true);
   };
 
+  // ✅ Auth success
   const handleAuthSuccess = () => {
     setIsLoggedIn(true);
     setShowModal(false);
@@ -52,7 +54,11 @@ const App = () => {
 
       {/* ROUTES */}
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* ✅ CHANGE IS HERE */}
+        <Route
+          path="/"
+          element={<Home openSignup={openSignup} openLogin={openLogin} />}
+        />
 
         <Route
           path="/category/:categoryName"
@@ -74,7 +80,7 @@ const App = () => {
           }
         />
 
-        {/* 🛒 Cart = public */}
+        {/* 🛒 Cart */}
         <Route
           path="/cart"
           element={
