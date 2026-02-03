@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
+import { useMutation } from "@apollo/client/react";
 import "./AuthModal.css";
+
+import {
+  LOGIN_USER,
+  SIGNUP_USER,
+} from "../../graphql/mutations";
 
 const AuthModal = ({ mode, setMode, closeModal, onSuccess }) => {
   const [formData, setFormData] = useState({
@@ -8,16 +14,25 @@ const AuthModal = ({ mode, setMode, closeModal, onSuccess }) => {
     password: "",
   });
 
+  const [loginUser, { loading: loginLoading }] =
+    useMutation(LOGIN_USER);
+
+  const [signupUser, { loading: signupLoading }] =
+    useMutation(SIGNUP_USER);
+
   // Reset form when mode changes
   useEffect(() => {
     setFormData({ name: "", email: "", password: "" });
   }, [mode]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
@@ -30,16 +45,58 @@ const AuthModal = ({ mode, setMode, closeModal, onSuccess }) => {
       return;
     }
 
-    // 🔐 later: backend API call
-    onSuccess();
+    try {
+      const mutation =
+        mode === "login" ? loginUser : signupUser;
+
+      const variables =
+        mode === "login"
+          ? {
+              email: formData.email,
+              password: formData.password,
+            }
+          : {
+              name: formData.name,
+              email: formData.email,
+              password: formData.password,
+            };
+
+      const res = await mutation({ variables });
+
+      const data =
+        mode === "login"
+          ? res.data.loginUser
+          : res.data.signupUser;
+
+      // 🔐 Save token
+      localStorage.setItem("token", data.token);
+
+      onSuccess(); // sets isLoggedIn = true
+    } catch (err) {
+      alert(err.message || "Authentication failed");
+    }
   };
+
+  const loading = loginLoading || signupLoading;
 
   return (
     <div className="auth-overlay" onClick={closeModal}>
-      <div className="auth-box" onClick={(e) => e.stopPropagation()}>
-        <button className="close-btn" onClick={closeModal}>✕</button>
+      <div
+        className="auth-box"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className="close-btn"
+          onClick={closeModal}
+        >
+          ✕
+        </button>
 
-        <h2>{mode === "login" ? "Welcome Back" : "Join Shavick"}</h2>
+        <h2>
+          {mode === "login"
+            ? "Welcome Back"
+            : "Join Shavick"}
+        </h2>
 
         <form onSubmit={handleSubmit}>
           {mode === "signup" && (
@@ -68,8 +125,16 @@ const AuthModal = ({ mode, setMode, closeModal, onSuccess }) => {
             onChange={handleChange}
           />
 
-          <button className="auth-submit" type="submit">
-            {mode === "login" ? "Login" : "Sign Up"}
+          <button
+            className="auth-submit"
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Please wait..."
+              : mode === "login"
+              ? "Login"
+              : "Sign Up"}
           </button>
         </form>
 
@@ -79,10 +144,16 @@ const AuthModal = ({ mode, setMode, closeModal, onSuccess }) => {
             : "Already have an account?"}
           <span
             onClick={() =>
-              setMode(mode === "login" ? "signup" : "login")
+              setMode(
+                mode === "login"
+                  ? "signup"
+                  : "login"
+              )
             }
           >
-            {mode === "login" ? " Sign up" : " Login"}
+            {mode === "login"
+              ? " Sign up"
+              : " Login"}
           </span>
         </p>
       </div>
